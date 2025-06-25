@@ -196,7 +196,7 @@ active
         <tr>
             <th rowspan="3">NO.</th>
             <th rowspan="3" style="width: 300px;">NAME OF STUDENTS</th>
-            <th colspan="{{(isset($attendances) ? count($attendances) : 0) + (isset($quizes) ? count($quizes) : 0) + 5}}" style="text-align: center;">CLASS WORKS (40%)</th>
+            <th colspan="{{(isset($attendances) ? count($attendances) : 0) + (isset($quizes) ? count($quizes) : 0) + 5}}" style="text-align: center;">CLASS WORKS ({{ $percentage->classwork }}%)</th>
             <th colspan="1">Transmu({{$percentage->classwork}}%)</th>
             <th rowspan="3"></th>
             <th colspan="{{(isset($activities) ? count($activities) : 0) + (isset($assignments) ? count($assignments) : 0) + (isset($projects) ? count($projects) : 0) + 2}}" style="text-align: center;">Project/Hands-on Outputs</th>
@@ -218,10 +218,10 @@ active
                     @endif 
                 @endisset
             </th>
-            <th rowspan="3">Remarks</th>
+            <th rowspan="3">Grades</th>
         </tr>
-        <tr style="background-color: rgb(153, 40, 40);">
-            <th colspan="{{ isset($attendances) && count($attendances) ? count($quizes) + 3 : 3 }}" style="text-align: center">Attendance/Class Participation</th>
+        <tr style="background-color: rgb(240, 125, 59);">
+            <th colspan="{{ isset($attendances) && count($attendances) ? count($attendances) + 3 : 3 }}" style="text-align: center">Attendance/Class Participation</th>
             <th colspan="{{ isset($quizes) && count($quizes) ? count($quizes) + 3 : 3 }}" style="text-align: center">Quizzes</th>
             <th colspan="{{ (isset($activities) ? count($activities) : 0) + (isset($assignments) ? count($assignments) : 0) + (isset($project) ? count($project) : 0) + 4 }}" style="text-align: center">Activity/Project</th>
             <th colspan="{{ isset($major_exams) && count($major_exams) ? count($major_exams) + 3 : 3 }}" style="text-align: center">Midterm Exam</th>
@@ -229,13 +229,15 @@ active
         <tr>
             @isset($attendances)
                 @foreach($attendances as $element)
-                    <th style="text-align: center;">{{$element->name}}</th>
+                    {{-- <th style="text-align: center;">{{$element->name}}</th> --}}
+                    <th style="text-align: center;">Attendance</th>
+
                 @endforeach
             @endisset
 
-             <th style="text-align: center;font-weight: bold;color: blue;">TOTAL</th> 
-            <td style="text-align: center;font-weight: bold;color: violet;"><input type="number" id="attendance_percentage" @isset($dynamic_percentage) value="{{ $dynamic_percentage->attendance_percentage }}" @else value="0" @endisset onchange="handleDynamicPercentage()"><span>%</span></td>
-            <th style="text-align: center;font-weight: bold;color: green;">equiv</th>
+             <th style="text-align: center;font-weight: bold;color: blue;"><span>&#x3a3;</span></th> 
+            <td style="text-align: center;font-weight: bold;color: violet;">TS</td>
+            <th style="text-align: center;font-weight: bold;color: green;"><span>%</span></th>
 
              @isset($quizes)
                 @foreach($quizes as $element)
@@ -243,9 +245,9 @@ active
                 @endforeach
             @endisset
 
-             <th style="text-align: center;font-weight: bold;color: blue;">TOTAL</th>
-            <td style="text-align: center;font-weight: bold;color: violet;"><input type="number" id="quiz_percentage" @isset($dynamic_percentage) value="{{ $dynamic_percentage->quiz_percentage }}" @else value="0" @endisset onchange="handleDynamicPercentage()"><span>%</span></td>
-            <th style="text-align: center;font-weight: bold;color: green;">equiv</th>
+             <th style="text-align: center;font-weight: bold;color: blue;"><span>&#x3a3;</span></th>
+            <td style="text-align: center;font-weight: bold;color: violet;">TS</td>
+            <th style="text-align: center;font-weight: bold;color: green;">%</th>
 
              @isset($activities)
                 @foreach($activities as $element)
@@ -265,9 +267,9 @@ active
                 @endforeach
             @endisset
 
-            <th style="text-align: center;font-weight: bold;color: blue;">TOTAL</th>
-            <th style="text-align: center;font-weight: bold;color: violet;">%</th>
-            <th style="text-align: center;font-weight: bold;color: green;">equiv</th>
+            <th style="text-align: center;font-weight: bold;color: blue;"><span>&#x3a3;</span></th>
+            <th style="text-align: center;font-weight: bold;color: violet;">TS</th>
+            <th style="text-align: center;font-weight: bold;color: green;">%</th>
 
             @isset($major_exams)
                 @foreach($major_exams as $element)
@@ -275,9 +277,9 @@ active
                 @endforeach
             @endisset
 
-            <th style="text-align: center;font-weight: bold;color: blue;">TOTAL</th>
-            <th style="text-align: center;font-weight: bold;color: violet;">%</th>
-            <th style="text-align: center;font-weight: bold;color: green;">equiv</th>
+            <th style="text-align: center;font-weight: bold;color: blue;"><span>&#x3a3;</span></th>
+            <th style="text-align: center;font-weight: bold;color: violet;">TS</th>
+            <th style="text-align: center;font-weight: bold;color: green;">%</th>
 
         </tr>
         <tr>
@@ -307,7 +309,7 @@ active
 
                             <th style="text-align: center;font-weight: bold;color: blue;">{{$attendances_total}}</th>
                           <th style="text-align: center;font-weight: bold;color: violet;">100</th>
-                          <th style="text-align: center;font-weight: bold;color: green;">1.0</th>
+                          <th style="text-align: center;font-weight: bold;color: green;"><input type="number" id="attendance_percentage" @isset($dynamic_percentage) value="{{ $dynamic_percentage->attendance_percentage }}" @else value="0" @endisset onchange="handleDynamicPercentage()"></th>
 
                 <!-- Quizes HPS-->
                           @isset($quizes)
@@ -322,7 +324,7 @@ active
 
                             <th style="text-align: center;font-weight: bold;color: blue;">{{$quizes_total}}</th>
                           <th style="text-align: center;font-weight: bold;color: violet;">100</th>
-                          <th style="text-align: center;font-weight: bold;color: green;">1.0</th>
+                          <th style="text-align: center;font-weight: bold;color: green;"><input type="number" id="quiz_percentage" @isset($dynamic_percentage) value="{{ $dynamic_percentage->quiz_percentage }}" @else value="0" @endisset onchange="handleDynamicPercentage()"></th>
 
                           {{-- Empty <th> for layout only --}}
                           <th></th>
@@ -361,7 +363,7 @@ active
 
                           <th style="text-align: center;font-weight: bold;color: blue;">{{$activities_total + $assignments_total + $proj_total }}</th>
                           <th style="text-align: center;font-weight: bold;color: violet;">100</th>
-                          <th style="text-align: center;font-weight: bold;color: green;">1.0</th>
+                          <th style="text-align: center;font-weight: bold;color: green;">{{ $percentage->projects }}</th>
 
                             {{-- Empty <th> for layout only --}}
                           <th></th>
@@ -377,7 +379,7 @@ active
 
                           <th style="text-align: center;font-weight: bold;color: blue;">{{$exam_total}}</th>
                           <th style="text-align: center;font-weight: bold;color: violet;">100</th>
-                          <th style="text-align: center;font-weight: bold;color: green;">1.0</th>
+                          <th style="text-align: center;font-weight: bold;color: green;">{{ $percentage->exams }}</th>
                       </tr>
     </thead>
     <tbody>
@@ -385,7 +387,7 @@ active
             <?php 
                 $x = 0; 
                 // Functions for grading logic
-                if($collection->year == 1){
+                // if($collection->year == 1){
                                 function getGradewithBoard($score) {
                                     if ($score >= 95) return 1.0;
                                     elseif ($score >= 94) return 1.1;
@@ -457,95 +459,95 @@ active
                                     else return 5.0; // For scores below 56
                                 }
                                 
-                            }else{
-                                function getGradewithBoard($score) {
-                                    if ($score >= 100) return 1.0;
-                                    elseif ($score >= 98) return 1.1;
-                                    elseif ($score >= 96) return 1.2;
-                                    elseif ($score >= 94) return 1.3;
-                                    elseif ($score >= 92) return 1.4;
-                                    elseif ($score >= 90) return 1.5;
-                                    elseif ($score >= 88) return 1.6;
-                                    elseif ($score >= 86) return 1.7;
-                                    elseif ($score >= 84) return 1.8;
-                                    elseif ($score >= 82) return 1.9;
-                                    elseif ($score >= 80) return 2.0;
-                                    elseif ($score >= 78) return 2.1;
-                                    elseif ($score >= 76) return 2.2;
-                                    elseif ($score >= 74) return 2.3;
-                                    elseif ($score >= 72) return 2.4;
-                                    elseif ($score >= 70) return 2.5;
-                                    elseif ($score >= 68) return 2.6;
-                                    elseif ($score >= 66) return 2.7;
-                                    elseif ($score >= 64) return 2.8;
-                                    elseif ($score >= 62) return 2.9;
-                                    elseif ($score >= 60) return 3.0;
-                                    elseif ($score >= 58) return 3.1;
-                                    elseif ($score >= 56) return 3.2;
-                                    elseif ($score >= 54) return 3.3;
-                                    elseif ($score >= 52) return 3.4;
-                                    elseif ($score >= 50) return 3.5;
-                                    elseif ($score >= 48) return 3.6;
-                                    elseif ($score >= 46) return 3.7;
-                                    elseif ($score >= 44) return 3.8;
-                                    elseif ($score >= 42) return 3.9;
-                                    elseif ($score >= 40) return 4.0;
-                                    elseif ($score >= 38) return 4.1;
-                                    elseif ($score >= 36) return 4.2;
-                                    elseif ($score >= 34) return 4.3;
-                                    elseif ($score >= 32) return 4.4;
-                                    elseif ($score >= 30) return 4.5;
-                                    elseif ($score >= 28) return 4.6;
-                                    elseif ($score >= 26) return 4.7;
-                                    elseif ($score >= 24) return 4.8;
-                                    elseif ($score >= 20) return 4.9;
-                                    else return 5.0; // For scores below 20
-                                }
+                            // }else{
+                            //     function getGradewithBoard($score) {
+                            //         if ($score >= 100) return 1.0;
+                            //         elseif ($score >= 98) return 1.1;
+                            //         elseif ($score >= 96) return 1.2;
+                            //         elseif ($score >= 94) return 1.3;
+                            //         elseif ($score >= 92) return 1.4;
+                            //         elseif ($score >= 90) return 1.5;
+                            //         elseif ($score >= 88) return 1.6;
+                            //         elseif ($score >= 86) return 1.7;
+                            //         elseif ($score >= 84) return 1.8;
+                            //         elseif ($score >= 82) return 1.9;
+                            //         elseif ($score >= 80) return 2.0;
+                            //         elseif ($score >= 78) return 2.1;
+                            //         elseif ($score >= 76) return 2.2;
+                            //         elseif ($score >= 74) return 2.3;
+                            //         elseif ($score >= 72) return 2.4;
+                            //         elseif ($score >= 70) return 2.5;
+                            //         elseif ($score >= 68) return 2.6;
+                            //         elseif ($score >= 66) return 2.7;
+                            //         elseif ($score >= 64) return 2.8;
+                            //         elseif ($score >= 62) return 2.9;
+                            //         elseif ($score >= 60) return 3.0;
+                            //         elseif ($score >= 58) return 3.1;
+                            //         elseif ($score >= 56) return 3.2;
+                            //         elseif ($score >= 54) return 3.3;
+                            //         elseif ($score >= 52) return 3.4;
+                            //         elseif ($score >= 50) return 3.5;
+                            //         elseif ($score >= 48) return 3.6;
+                            //         elseif ($score >= 46) return 3.7;
+                            //         elseif ($score >= 44) return 3.8;
+                            //         elseif ($score >= 42) return 3.9;
+                            //         elseif ($score >= 40) return 4.0;
+                            //         elseif ($score >= 38) return 4.1;
+                            //         elseif ($score >= 36) return 4.2;
+                            //         elseif ($score >= 34) return 4.3;
+                            //         elseif ($score >= 32) return 4.4;
+                            //         elseif ($score >= 30) return 4.5;
+                            //         elseif ($score >= 28) return 4.6;
+                            //         elseif ($score >= 26) return 4.7;
+                            //         elseif ($score >= 24) return 4.8;
+                            //         elseif ($score >= 20) return 4.9;
+                            //         else return 5.0; // For scores below 20
+                            //     }
     
-                                function getGradewithoutBoard($score) {
-                                    if ($score >= 99) return 1.0;
-                                    elseif ($score >= 97) return 1.1;
-                                    elseif ($score >= 94) return 1.2;
-                                    elseif ($score >= 92) return 1.3;
-                                    elseif ($score >= 89) return 1.4;
-                                    elseif ($score >= 87) return 1.5;
-                                    elseif ($score >= 84) return 1.6;
-                                    elseif ($score >= 82) return 1.7;
-                                    elseif ($score >= 79) return 1.8;
-                                    elseif ($score >= 77) return 1.9;
-                                    elseif ($score >= 74) return 2.0;
-                                    elseif ($score >= 72) return 2.1;
-                                    elseif ($score >= 69) return 2.2;
-                                    elseif ($score >= 66) return 2.3;
-                                    elseif ($score >= 64) return 2.4;
-                                    elseif ($score >= 61) return 2.5;
-                                    elseif ($score >= 59) return 2.6;
-                                    elseif ($score >= 56) return 2.7;
-                                    elseif ($score >= 54) return 2.8;
-                                    elseif ($score >= 52) return 2.9;
-                                    elseif ($score >= 50) return 3.0;
-                                    elseif ($score >= 47) return 3.1;
-                                    elseif ($score >= 44) return 3.2;
-                                    elseif ($score >= 42) return 3.3;
-                                    elseif ($score >= 39) return 3.4;
-                                    elseif ($score >= 37) return 3.5;
-                                    elseif ($score >= 34) return 3.6;
-                                    elseif ($score >= 32) return 3.7;
-                                    elseif ($score >= 29) return 3.8;
-                                    elseif ($score >= 27) return 3.9;
-                                    elseif ($score >= 24) return 4.0;
-                                    elseif ($score >= 22) return 4.1;
-                                    elseif ($score >= 19) return 4.2;
-                                    elseif ($score >= 17) return 4.3;
-                                    elseif ($score >= 14) return 4.4;
-                                    elseif ($score >= 12) return 4.5;
-                                    elseif ($score >= 9) return 4.6;
-                                    elseif ($score >= 7) return 4.7;
-                                    elseif ($score >= 4) return 4.8;
-                                    elseif ($score >= 2) return 4.9;
-                                    else return 5.0; // For scores 0-1
-                                }
-                            } 
+                            //     function getGradewithoutBoard($score) {
+                            //         if ($score >= 99) return 1.0;
+                            //         elseif ($score >= 97) return 1.1;
+                            //         elseif ($score >= 94) return 1.2;
+                            //         elseif ($score >= 92) return 1.3;
+                            //         elseif ($score >= 89) return 1.4;
+                            //         elseif ($score >= 87) return 1.5;
+                            //         elseif ($score >= 84) return 1.6;
+                            //         elseif ($score >= 82) return 1.7;
+                            //         elseif ($score >= 79) return 1.8;
+                            //         elseif ($score >= 77) return 1.9;
+                            //         elseif ($score >= 74) return 2.0;
+                            //         elseif ($score >= 72) return 2.1;
+                            //         elseif ($score >= 69) return 2.2;
+                            //         elseif ($score >= 66) return 2.3;
+                            //         elseif ($score >= 64) return 2.4;
+                            //         elseif ($score >= 61) return 2.5;
+                            //         elseif ($score >= 59) return 2.6;
+                            //         elseif ($score >= 56) return 2.7;
+                            //         elseif ($score >= 54) return 2.8;
+                            //         elseif ($score >= 52) return 2.9;
+                            //         elseif ($score >= 50) return 3.0;
+                            //         elseif ($score >= 47) return 3.1;
+                            //         elseif ($score >= 44) return 3.2;
+                            //         elseif ($score >= 42) return 3.3;
+                            //         elseif ($score >= 39) return 3.4;
+                            //         elseif ($score >= 37) return 3.5;
+                            //         elseif ($score >= 34) return 3.6;
+                            //         elseif ($score >= 32) return 3.7;
+                            //         elseif ($score >= 29) return 3.8;
+                            //         elseif ($score >= 27) return 3.9;
+                            //         elseif ($score >= 24) return 4.0;
+                            //         elseif ($score >= 22) return 4.1;
+                            //         elseif ($score >= 19) return 4.2;
+                            //         elseif ($score >= 17) return 4.3;
+                            //         elseif ($score >= 14) return 4.4;
+                            //         elseif ($score >= 12) return 4.5;
+                            //         elseif ($score >= 9) return 4.6;
+                            //         elseif ($score >= 7) return 4.7;
+                            //         elseif ($score >= 4) return 4.8;
+                            //         elseif ($score >= 2) return 4.9;
+                            //         else return 5.0; // For scores 0-1
+                            //     }
+                            // } 
 
                    //Calcuate the final Weighted grade         
                  function calculateFinalGrade($attendance_grade, $quiz_grade, $project_score, $exam_score,$attendance_percent, $quiz_percent, $project_percent, $exam_percent):float { 
@@ -595,11 +597,15 @@ active
 
                     <td style="text-align: center;font-weight: bold;color: blue;">{{$attendance_studtotal}}</td>
                     <?php 
-                       $attendance_ass_percent = $attendance_studtotal > 0 ? round((round($attendance_studtotal) / $attendances_total) * 50 + 50) : 0;
+                    //    $attendance_ass_percent = $attendance_studtotal > 0 ? round((round($attendance_studtotal) / $attendances_total) * 50 + 50) : 0;
+                       $attendance_ass_percent = $attendance_studtotal > 0 ?   ($attendance_studtotal / $attendances_total) * 50 + 50 : 0;
                        $attendance_ass_grade = $collection->course->board_exam == 1 ? getGradewithBoard($attendance_ass_percent) : getGradewithoutBoard($attendance_ass_percent);
+                    $attendance_equiv = ((($dynamic_percentage->attendance_percentage ?? 0 ) / 100) * $attendance_ass_percent); 
                     ?>
-                    <td style="text-align: center;font-weight: bold;color: violet;">{{$attendance_ass_grade}}</td>
-                    <td style="text-align: center;font-weight: bold;color: {{ $attendance_ass_grade > 3 ? 'red' : 'green' }};">{{number_format($attendance_ass_grade ?? 0, 1)}}</td>
+                    <td style="text-align: center;font-weight: bold;color: violet;">{{ number_format($attendance_ass_percent, 2)}}</td>
+                    {{-- <td style="text-align: center;font-weight: bold;color: {{ $attendance_ass_grade > 3 ? 'red' : 'green' }};">{{number_format($attendance_ass_grade ?? 0, 1)}}</td> --}}
+                    <td style="text-align: center;font-weight: bold;color: green;">{{number_format($attendance_equiv,2)}}</td>
+
                      
 
                     @isset($quizes)
@@ -618,9 +624,11 @@ active
                     <?php 
                        $quizes_ass_percent = $quizes_studtotal > 0 ? round((round($quizes_studtotal) / $quizes_total) * 50 + 50) : 0;
                        $quizes_ass_grade = $collection->course->board_exam == 1 ? getGradewithBoard($quizes_ass_percent) : getGradewithoutBoard($quizes_ass_percent);
+                    $quizes_equiv = ((($dynamic_percentage->quiz_percentage ?? 0 ) / 100) * $quizes_ass_percent); 
+
                     ?>
-                    <td style="text-align: center;font-weight: bold;color: violet;">{{$quizes_ass_grade}}</td>
-                    <td style="text-align: center;font-weight: bold;color: {{ $quizes_ass_grade > 3 ? 'red' : 'green' }};">{{number_format($quizes_ass_grade ?? 0, 1)}}</td>
+                    <td style="text-align: center;font-weight: bold;color: violet;">{{number_format($quizes_ass_percent, 2)}}</td>
+                    <td style="text-align: center;font-weight: bold;color: green;">{{number_format($quizes_equiv ?? 0, 1)}}</td>
                      
                     <td></td>
                     
@@ -666,9 +674,11 @@ active
 
                         $activities_assignments_projects_percent = $act_ass_proj_total > 0 ? round((round($act_ass_proj_studtotal) / $act_ass_proj_total) * 50 + 50) : 0;
                         $activities_assignments_projects_percent_grade = $collection->course->board_exam == 1 ? getGradewithBoard($activities_assignments_projects_percent) : getGradewithoutBoard($activities_assignments_projects_percent);
-                    ?>
-                    <td style="text-align: center;font-weight: bold;color: violet;">{{$activities_assignments_projects_percent}}</td>
-                    <td style="text-align: center;font-weight: bold;color: {{ $activities_assignments_projects_percent_grade > 3 ? 'red' : 'green' }};">{{number_format($activities_assignments_projects_percent_grade ?? 0, 1)}}</td>
+                    $proj_equiv = ((($percentage->projects ?? 0 ) / 100) * $activities_assignments_projects_percent); 
+
+                   ?>
+                    <td style="text-align: center;font-weight: bold;color: violet;">{{number_format($activities_assignments_projects_percent, 2)}}</td>
+                    <td style="text-align: center;font-weight: bold;color: green;">{{number_format($proj_equiv ?? 0, 1)}}</td>
                     <td></td>
 
                     @isset($major_exams)
@@ -686,18 +696,23 @@ active
                     <?php 
                         $exam_percent = $exam_studtotal > 0 ? round((round($exam_studtotal) / $exam_total) * 50 + 50) : 0;
                         $exam_grade = $collection->course->board_exam == 1 ? getGradewithBoard($exam_percent) : getGradewithoutBoard($exam_percent);
+                    $exam_equiv = ((($percentage->exams ?? 0 ) / 100) * $exam_percent); 
+
                     ?>
-                    <td style="text-align: center;font-weight: bold;color: violet;">{{$exam_percent}}</td>
-                    <td style="text-align: center;font-weight: bold;color: {{ $exam_grade > 3 ? 'red' : 'green' }};">{{number_format($exam_grade ?? 0, 1)}}</td>
+                    <td style="text-align: center;font-weight: bold;color: violet;">{{number_format($exam_percent, 2)}}</td>
+                    <td style="text-align: center;font-weight: bold;color: green;">{{number_format($exam_equiv ?? 0, 1)}}</td>
                     <td></td>
 
                     <?php 
                     
                      $grade = calculateFinalGrade($attendance_ass_grade, $quizes_ass_grade, $activities_assignments_projects_percent_grade, $exam_grade, $dynamic_percentage->attendance_percentage ?? 0, $dynamic_percentage->quiz_percentage ?? 0, $percentage->projects, $percentage->exams);
-                      
+                      $raw_total_grade = $attendance_equiv + $quizes_equiv + $proj_equiv + $exam_equiv;
                     ?>
+                    {{-- <td style="text-align: center;font-weight: bold;color: {{ $grade > 3 ? 'red' : 'green' }};">{{number_format($grade ?? 0, 1)}}</td> --}}
+                    {{-- <td style="text-align: center;font-weight: bold;color: {{ $grade > 3 ? 'red' : 'black' }};">{{ $grade > 3 ? 'Failed' : 'Passed' }}</td> --}}
+                    <td style="text-align: center;font-weight: bold;color: {{ $grade > 3 ? 'red' : 'black' }};">{{ number_format($raw_total_grade, 2) }}</td>
                     <td style="text-align: center;font-weight: bold;color: {{ $grade > 3 ? 'red' : 'green' }};">{{number_format($grade ?? 0, 1)}}</td>
-                    <td style="text-align: center;font-weight: bold;color: {{ $grade > 3 ? 'red' : 'black' }};">{{ $grade > 3 ? 'Failed' : 'Passed' }}</td>
+
                      
                 </tr>
             @endforeach
