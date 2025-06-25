@@ -698,8 +698,7 @@ active
                     ?>
                     <td style="text-align: center;font-weight: bold;color: {{ $grade > 3 ? 'red' : 'green' }};">{{number_format($grade ?? 0, 1)}}</td>
                     <td style="text-align: center;font-weight: bold;color: {{ $grade > 3 ? 'red' : 'black' }};">{{ $grade > 3 ? 'Failed' : 'Passed' }}</td>
-                    <td></td>
-                    <td></td>
+                     
                 </tr>
             @endforeach
         @endisset
